@@ -23,6 +23,23 @@ Route::get('/songs/create', function()
     ]);
 });
 
+//Eloquent - DVD
+Route::get('/dvds/create', function()
+{
+    $ratings = Rating::all();
+    $genres = Genre::all();
+    $labels = Label::all();
+    $sounds = Sound::all();
+    $formats = Format::all();
+    return View::make('dvds/create', [
+        'ratings' => $ratings,
+        'genres' => $genres,
+        'labels' => $labels,
+        'sounds' => $sounds,
+        'formats' => $formats
+    ]);
+});
+
 
 Route::get('/songs/search', 'SongController@search');
 Route::get('/songs', 'SongController@listSongs');
@@ -44,6 +61,24 @@ Route::post('songs', function(){
     return Redirect::to('songs/create')
         ->with('success', 'Yay!');
 });
+
+// Eloquent - DVD
+Route::post('dvds', function(){
+
+    // title', 'rating_name', 'genre_name', 'label_name', 'sound_name', 'format_name', DB::raw("DATE_FORMAT(release_date, '%m-%d-%y %h:%i %p') AS release_date
+    $dvd = new DVD();
+    $dvd->title = Input::get('title');
+    $dvd->rating_id = Input::get('rating');
+    $dvd->genre_id = Input::get('genre');
+    $dvd->label_id = Input::get('label');
+    $dvd->sound_id = Input::get('sound');
+    $dvd->format_id = Input::get('format');
+    $dvd->save();
+
+    return Redirect::to('dvds/create')
+        ->with('success', 'Yay! Your record was inserted successfully.');
+});
+
 
 //Event::listen('illuminate.query', function($sql){
 //
@@ -83,3 +118,36 @@ Route::get('artists/{id}', function($id){
     $artist = Artist::find($id);
     dd($artist->songs);
 });
+
+
+// Many to one relationships
+Route::get('ratings/{id}', function($id){
+    $rating = Rating::find($id);
+    dd($rating->dvds);
+});
+
+// Many to one relationships
+Route::get('genres/{id}', function($id){
+    $genre = Genre::find($id);
+    dd($genre->dvds);
+});
+
+// Many to one relationships
+Route::get('labels/{id}', function($id){
+    $label = Label::find($id);
+    dd($label->dvds);
+});
+
+// Many to one relationships
+Route::get('sounds/{id}', function($id){
+    $sound = Sound::find($id);
+    dd($sound->dvds);
+});
+
+// Many to one relationships
+Route::get('formats/{id}', function($id){
+    $format = Format::find($id);
+    dd($format->dvds);
+});
+
+

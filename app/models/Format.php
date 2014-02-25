@@ -2,11 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: kalynnakano
- * Date: 2/21/14
- * Time: 11:29 PM
+ * Date: 2/24/14
+ * Time: 6:11 PM
  */
 
-class Rating extends Eloquent{
+class Format extends Eloquent{
     public function dvds(){
         return $this->hasMany('DVD');
     }

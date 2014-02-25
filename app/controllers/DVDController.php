@@ -17,10 +17,23 @@ class DVDController extends BaseController{
         $dvd_title = Input::get('dvd_title');
         $dvd_genre = Input::get('dvd_genre');
         $dvd_rating = Input::get('dvd_rating');
+        $query = DVD::with('genre','rating');
 
-        $dvds = DVD::search($dvd_title, $dvd_genre, $dvd_rating);
+        if($dvd_title) {
+            $query->where('title', 'LIKE', "%$dvd_title%");
+        }
+
+        if($dvd_genre && $dvd_genre!="all") {
+            $query->where('genre_name', 'LIKE', "%$dvd_genre%");
+        }
+
+        if($dvd_rating && $dvd_rating!="all") {
+            $query->where('rating_name', 'LIKE', "%$dvd_rating%");
+        }
+
         // dd($songs);
 
+        $dvds = $query->take(30)->get();
         return View::make('dvds/dvds-list', [
             'dvds' => $dvds
 

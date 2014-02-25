@@ -7,7 +7,39 @@
  */
 
 
-class DVD {
+class DVD extends Eloquent {
+
+
+    protected $table = 'dvds';
+
+
+    public function rating() {
+        // Set up one to many relationship
+        return $this->belongsTo('Rating');
+    }
+
+
+    public function genre() {
+        // One to many relationship
+        return $this->belongsTo('Genre');
+    }
+
+    public function label() {
+        // One to many relationship
+        return $this->belongsTo('Label');
+    }
+
+    public function sound() {
+        // One to many relationship
+        return $this->belongsTo('Sound');
+    }
+
+    public function format() {
+        // One to many relationship
+        return $this->belongsTo('Format');
+    }
+
+
     public static function search($dvd_title, $dvd_genre, $dvd_rating)
     {
         $query = DB::table('dvds')

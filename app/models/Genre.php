@@ -6,6 +6,8 @@
  * Time: 5:52 PM
  */
 
-class Genre extends Eloquent {
-
+class Genre extends Eloquent{
+    public function dvds(){
+        return $this->hasMany('DVD');
+    }
 } 
