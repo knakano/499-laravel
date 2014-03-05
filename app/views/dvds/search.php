@@ -24,10 +24,10 @@
             </div>
             <div>
             <label>Genre:</label>
-            <select name ="dvd_genre">
+            <select name ="genre">
                 <option value="all">All</option>
                 <?php foreach ($genres as $genre) : ?>
-                    <option value="<?php echo $genre->genre_name ?>">
+                    <option value="<?php echo $genre->id ?>">
                         <?php echo $genre->genre_name ?>
                     </option>
                 <?php endforeach ?>
@@ -35,10 +35,10 @@
             </div>
             <div>
                 <label>Rating:</label>
-                <select name ="dvd_rating">
+                <select name ="rating">
                     <option value="all">All</option>
                     <?php foreach ($ratings as $rating) : ?>
-                        <option value="<?php echo $rating->rating_name ?>">
+                        <option value="<?php echo $rating->id ?>">
                             <?php echo $rating->rating_name ?>
                         </option>
                     <?php endforeach ?>

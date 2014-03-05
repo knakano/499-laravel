@@ -14,9 +14,17 @@
     </p>
 <?php endif; ?>
 
+<?php var_dump($errors->all()); ?>
+
+<?php if (Session::has('errors')) : ?>
+    <p style="color: red;">
+        <?php echo Session::get('errors') ?>
+    </p>
+<?php endif; ?>
+
 <form action = "<?php echo url('songs')?>" method="post">
 
-    Title: <input type="text" name="title">
+    Title: <input type="text" name="title" value="<?php echo Input::old('title') ?>">
     <br/>
 
     Artist:

@@ -18,6 +18,16 @@
         <?php echo Session::get('success') ?>
     </div>
 <?php endif; ?>
+
+<?php //var_dump($errors->all()); ?>
+
+<?php if (Session::has('errors')) : ?>
+    <div data-alert class="alert-box warning">
+        <?php foreach ($errors->all() as $error) : ?>
+            <?php echo $error ?>
+        <?php endforeach ?>
+    </div>
+<?php endif; ?>
 <div class="row" style="padding-top:50px">
     <div class="small-6 large-4 small-centered large-centered columns">
         <form action = "<?php echo url('dvds')?>" method="post">

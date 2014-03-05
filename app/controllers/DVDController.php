@@ -15,23 +15,35 @@ class DVDController extends BaseController{
     public function listDVDs() {
 
         $dvd_title = Input::get('dvd_title');
-        $dvd_genre = Input::get('dvd_genre');
-        $dvd_rating = Input::get('dvd_rating');
-        $query = DVD::with('genre','rating');
+        $genre = Input::get('genre');
+        $rating = Input::get('rating');
+        $query = DVD::with('genre', 'rating', 'label', 'sound', 'format');
 
         if($dvd_title) {
-            $query->where('title', 'LIKE', "%$dvd_title%");
+            $query = $query->where('title', 'LIKE', "%$dvd_title%");
         }
 
-        if($dvd_genre && $dvd_genre!="all") {
-            $query->where('genre_name', 'LIKE', "%$dvd_genre%");
+        if($genre && $genre!="all") {
+            $query = DVD::join('genres','genres.id', '=', 'dvds.genre_id')
+                       ->where('genre_name', '=', $genre);
+                           // ->join('genres', 'dvds.genre_id', '=', 'genres.id');
+
+//            $query = $query->join('genres', function($join) {
+//                $join->on('dvds.genre_id', '=', 'genres.id');
+//            });
+//            $query = $query->where('genre_name', 'LIKE', "%$dvd_genre%");
         }
 
-        if($dvd_rating && $dvd_rating!="all") {
-            $query->where('rating_name', 'LIKE', "%$dvd_rating%");
+        if($rating && $rating!="all") {
+
+            $query = DVD::join('ratings','ratings.id', '=', 'dvds.rating_id')
+                ->where('rating_name', '=', $rating);
+            //$query = $query->where('rating_name', 'LIKE', "%$rating%");
+                //->join('ratings', 'dvds.rating_id', '=', 'ratings.id');
         }
 
         // dd($songs);
+        //$dvds = DVD::search($dvd_title,$dvd_genre,$dvd_rating);
 
         $dvds = $query->take(30)->get();
         return View::make('dvds/dvds-list', [

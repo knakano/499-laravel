@@ -7,6 +7,7 @@
 <body>
 <div class="row" style="padding-top:50px">
     <div class="small-12 large-12 small-centered large-centered columns">
+
         <?php if (empty($dvds)) : ?>
             <h2>Sorry, no results were found. <a href="./dvds/search">Return to search</a></h2>
         <?php else: ?>

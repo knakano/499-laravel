@@ -8,6 +8,13 @@
 
 class Song extends Eloquent{
 
+       public static function validate($input)
+       {
+           return Validator::make($input, [
+               'title'=> 'required|min:4',
+               'price'=> 'required|numeric'
+           ]);
+       }
        public function artist() {
            // Set up one to many relationship
            return $this->belongsTo('Artist');

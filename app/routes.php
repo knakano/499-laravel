@@ -11,6 +11,20 @@
 |
 */
 
+Route::get('itunes', function() {
+//    $endpoint = "https://itunes.apple.com/search?term=jack+johnson";
+//    $json = file_get_contents($endpoint);
+//    $json = json_decode($json);
+    //dd ($json);
+
+
+    $itunes = new \Itp\Api\ItunesSearch();
+    $json = $itunes->getResults();
+    return View::make('itunes', [
+        'songs' => $json->results
+    ]);
+});
+
 
 //Eloquent
 Route::get('/songs/create', function()
@@ -26,20 +40,22 @@ Route::get('/songs/create', function()
 //Eloquent - DVD
 Route::get('/dvds/create', function()
 {
-    $ratings = Rating::all();
-    $genres = Genre::all();
-    $labels = Label::all();
-    $sounds = Sound::all();
-    $formats = Format::all();
-    return View::make('dvds/create', [
-        'ratings' => $ratings,
-        'genres' => $genres,
-        'labels' => $labels,
-        'sounds' => $sounds,
-        'formats' => $formats
-    ]);
+        $ratings = Rating::all();
+        $genres = Genre::all();
+        $labels = Label::all();
+        $sounds = Sound::all();
+        $formats = Format::all();
+        return View::make('dvds/create', [
+            'ratings' => $ratings,
+            'genres' => $genres,
+            'labels' => $labels,
+            'sounds' => $sounds,
+            'formats' => $formats
+        ]);
 });
 
+Route::get('/recipes/search', 'RecipeController@search');
+Route::get('/recipes', 'RecipeController@listRecipes');
 
 Route::get('/songs/search', 'SongController@search');
 Route::get('/songs', 'SongController@listSongs');
@@ -50,36 +66,58 @@ Route::get('/dvds', 'DVDController@listDVDs');
 
 // Eloquent
 Route::post('songs', function(){
+//    $validation = Validator::make(Input::all(), [
+//        'title' => 'required|min:2',
+//        'price' => 'required|numeric'
+//    ]);
+    $validation = Song::validate(Input::all());
 
-    $song = new Song();
-    $song->title = Input::get('title');
-    $song->artist_id = Input::get('artist');
-    $song->genre_id = Input::get('genre');
-    $song->price = Input::get('price');
-    $song->save();
+    if ($validation->passes()) {
+        $song = new Song();
+        $song->title = Input::get('title');
+        $song->artist_id = Input::get('artist');
+        $song->genre_id = Input::get('genre');
+        $song->price = Input::get('price');
+        $song->save();
+
+        return Redirect::to('songs/create')
+            ->with('success', 'Yay!');
+    }
 
     return Redirect::to('songs/create')
-        ->with('success', 'Yay!');
+        ->withInput()
+        ->with('errors', $validation->messages());
+
 });
 
 // Eloquent - DVD
 Route::post('dvds', function(){
 
     // title', 'rating_name', 'genre_name', 'label_name', 'sound_name', 'format_name', DB::raw("DATE_FORMAT(release_date, '%m-%d-%y %h:%i %p') AS release_date
-    $dvd = new DVD();
-    $dvd->title = Input::get('title');
-    $dvd->rating_id = Input::get('rating');
-    $dvd->genre_id = Input::get('genre');
-    $dvd->label_id = Input::get('label');
-    $dvd->sound_id = Input::get('sound');
-    $dvd->format_id = Input::get('format');
-    $dvd->save();
+
+    $validation = DVD::validate(Input::all());
+
+    if ($validation->passes()) {
+        $dvd = new DVD();
+        $dvd->title = Input::get('title');
+        $dvd->rating_id = Input::get('rating');
+        $dvd->genre_id = Input::get('genre');
+        $dvd->label_id = Input::get('label');
+        $dvd->sound_id = Input::get('sound');
+        $dvd->format_id = Input::get('format');
+        $dvd->save();
+
+        return Redirect::to('dvds/create')
+            ->with('success', 'Yay! Your record was inserted successfully.');
+    }
 
     return Redirect::to('dvds/create')
-        ->with('success', 'Yay! Your record was inserted successfully.');
+        ->with('errors', $validation->messages())
+        ->withInput(Input::old('title'));
+
 });
 
-
+//
 //Event::listen('illuminate.query', function($sql){
 //
 //    // Good for debugging

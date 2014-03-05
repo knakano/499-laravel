@@ -13,6 +13,18 @@ class DVD extends Eloquent {
     protected $table = 'dvds';
 
 
+    public static function validate($input)
+    {
+        return Validator::make($input, [
+            'title'=> 'required|min:3',
+            'rating'=> 'required|numeric',
+            'genre'=> 'required|numeric',
+            'label'=> 'required|numeric',
+            'sound'=> 'required|numeric',
+            'format'=> 'required|numeric'
+        ]);
+    }
+
     public function rating() {
         // Set up one to many relationship
         return $this->belongsTo('Rating');
@@ -64,6 +76,8 @@ class DVD extends Eloquent {
         }
 
         $dvds = $query->get();
+
+        //$dvds = $query->take(30)->get();
 
         return $dvds;
 
